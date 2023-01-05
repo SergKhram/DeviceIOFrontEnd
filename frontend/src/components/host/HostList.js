@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, ButtonGroup, Container, Table } from 'reactstrap';
+import { Button, ButtonGroup, Container, Table } from 'react-bootstrap';
 import AppNavbar from './../AppNavbar';
 import { Link } from 'react-router-dom';
 
@@ -82,7 +82,7 @@ class HostList extends Component {
                 <td>{host.port}</td>
                 <td>
                     <ButtonGroup>
-                        <Button size="sm" color="primary" tag={Link} to={"/hosts/" + host.id}>Edit</Button>
+                        <Button size="sm" color="primary" as={Link} to={"/hosts/" + host.id}>Edit</Button>
                         <Button size="sm" color="danger" onClick={() => this.remove(host.id)}>Delete</Button>
                         <Button size="sm" color="info" onClick={() => this.connect(host.id)}>Connect</Button>
                     </ButtonGroup>
@@ -95,7 +95,7 @@ class HostList extends Component {
                 <AppNavbar/>
                 <Container fluid>
                     <div className="float-right">
-                        <Button color="success" tag={Link} to="/hosts/new">Add host</Button>
+                        <Button color="success" as={Link} to="/hosts/new">Add host</Button>
                     </div>
                     <h3>Hosts</h3>
                     <Table className="mt-4">

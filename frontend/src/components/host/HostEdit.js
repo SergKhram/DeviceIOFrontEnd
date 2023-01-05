@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Button, Container, Form, FormGroup, Control, Label } from 'react-bootstrap';
+import { Button, Container, Form } from 'react-bootstrap';
 import AppNavbar from './../AppNavbar';
+import Stack from 'react-bootstrap/Stack';
 
 class HostEdit extends Component {
 
@@ -67,25 +68,28 @@ class HostEdit extends Component {
             <Container>
                 {title}
                 <Form onSubmit={this.handleSubmit}>
-                    <FormGroup className="mb-3">
-                        <Form.Label for="name">Name</Form.Label>
-                        <Form.Control type="text" name="name" id="name" value={item.name || ''}
-                               onChange={this.handleChange} placeholder="name"/>
-                    </FormGroup>
-                    <FormGroup>
-                        <Form.Label for="address">Address</Form.Label>
-                        <Form.Control type="text" name="address" id="address" value={item.address || ''}
-                               onChange={this.handleChange} placeholder="address"/>
-                    </FormGroup>
-                    <FormGroup>
-                        <Form.Label for="port">Port</Form.Label>
-                        <Form.Control type="text" name="port" id="port" value={item.port || ''}
-                               onChange={this.handleChange} placeholder="port"/>
-                    </FormGroup>
-                    <FormGroup>
-                        <Button color="primary" type="submit">Save</Button>{' '}
-                        <Button color="secondary" as={Link} to="/hosts">Cancel</Button>
-                    </FormGroup>
+                  <Form.Group className="mb-3">
+                    <Form.Label for="name">Name</Form.Label>
+                    <Form.Control type="text" name="name" id="name" value={item.name || ''}
+                           onChange={this.handleChange} placeholder="Name"/>
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label for="address">Address</Form.Label>
+                    <Form.Control type="text" name="address" id="address" value={item.address || ''}
+                         onChange={this.handleChange} placeholder="Address"/>
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label for="port">Port</Form.Label>
+                    <Form.Control type="text" name="port" id="port" value={item.port || ''}
+                         onChange={this.handleChange} placeholder="Port"/>
+                  </Form.Group>
+
+                  <Stack direction="horizontal" gap={2}>
+                    <Button variant="primary" type="submit" className="ms-auto">Save</Button>
+                    <Button variant="secondary" as={Link} to="/hosts">Cancel</Button>
+                  </Stack>
                 </Form>
             </Container>
         </div>

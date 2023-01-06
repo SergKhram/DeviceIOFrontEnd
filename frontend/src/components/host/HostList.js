@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Button, ButtonGroup, Container, Table } from 'react-bootstrap';
+import { Button, ButtonGroup, Container, Table, Stack, Badge } from 'react-bootstrap';
 import AppNavbar from './../AppNavbar';
 import { Link } from 'react-router-dom';
-import Stack from 'react-bootstrap/Stack';
 
 class HostList extends Component {
     constructor(props) {
@@ -84,7 +83,7 @@ class HostList extends Component {
                 <td>{String(host.isActive)}</td>
                 <td>
                     <ButtonGroup>
-                        <Button size="sm" variant="primary" as={Link} to={"/hosts/" + host.id}>Edit</Button>
+                        <Button size="sm" variant="dark" as={Link} to={"/hosts/" + host.id}>Edit</Button>
                         <Button size="sm" variant="danger" onClick={() => this.remove(host.id)}>Delete</Button>
                         <Button size="sm" variant="success" onClick={() => this.connect(host.id)}>Connect</Button>
                     </ButtonGroup>
@@ -97,9 +96,9 @@ class HostList extends Component {
                 <AppNavbar/>
                 <Container fluid>
                     <Stack direction="horizontal" gap={2}>
-                      <h2>Hosts</h2>
+                      <h2>Hosts <Badge bg="dark">{hosts.length}</Badge></h2>
                       <div className="float-right ms-auto">
-                          <Button color="success" as={Link} to="/hosts/new">Add host</Button>
+                          <Button variant="dark" as={Link} to="/hosts/new">Add host</Button>
                       </div>
                     </Stack>
                     <Table className="mt-4">

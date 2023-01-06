@@ -87,8 +87,8 @@ class HostEdit extends Component {
                   </Form.Group>
 
                   <Stack direction="horizontal" gap={2}>
-                    <Button variant="primary" type="submit" className="ms-auto">Save</Button>
-                    <Button variant="secondary" as={Link} to="/hosts">Cancel</Button>
+                    <Button variant="outline-dark" type="submit" className="ms-auto">Save</Button>
+                    <Button variant="outline-secondary" as={Link} to="/hosts">Cancel</Button>
                   </Stack>
                 </Form>
             </Container>

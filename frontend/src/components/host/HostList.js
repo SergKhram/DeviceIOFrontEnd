@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Button, ButtonGroup, Container, Table } from 'reactstrap';
+import { Button, ButtonGroup, Container, Table, Stack, Badge } from 'react-bootstrap';
 import AppNavbar from './../AppNavbar';
 import { Link } from 'react-router-dom';
+import { RiRefreshLine } from 'react-icons/ri';
 
 class HostList extends Component {
     constructor(props) {
@@ -10,6 +11,10 @@ class HostList extends Component {
             this.remove = this.remove.bind(this);
     }
     componentDidMount() {
+        this.getHosts()
+    }
+
+    async getHosts() {
         fetch('/hosts')
             .then(response => response.json())
             .then(data => this.setState({hosts: data}));
@@ -72,6 +77,17 @@ class HostList extends Component {
         })
     }
 
+    async updateState(id) {
+        await fetch(`/host/${id}/updateState?deleteDevices=true`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        this.getHosts()
+    }
+
     render() {
         const {hosts} = this.state;
 
@@ -80,11 +96,13 @@ class HostList extends Component {
                 <td style={{whiteSpace: 'nowrap'}}>{host.name}</td>
                 <td>{host.address}</td>
                 <td>{host.port}</td>
+                <td>{String(host.isActive)}</td>
                 <td>
                     <ButtonGroup>
-                        <Button size="sm" color="primary" tag={Link} to={"/hosts/" + host.id}>Edit</Button>
-                        <Button size="sm" color="danger" onClick={() => this.remove(host.id)}>Delete</Button>
-                        <Button size="sm" color="info" onClick={() => this.connect(host.id)}>Connect</Button>
+                        <Button size="sm" variant="outline-dark" as={Link} to={"/hosts/" + host.id}>Edit</Button>
+                        <Button size="sm" variant="outline-danger" onClick={() => this.remove(host.id)}>Delete</Button>
+                        <Button size="sm" variant="outline-success" onClick={() => this.connect(host.id)}>Connect</Button>
+                        <Button size="sm" variant="outline-info" onClick={() => this.updateState(host.id)}><RiRefreshLine /></Button>
                     </ButtonGroup>
                 </td>
             </tr>
@@ -94,16 +112,19 @@ class HostList extends Component {
             <div>
                 <AppNavbar/>
                 <Container fluid>
-                    <div className="float-right">
-                        <Button color="success" tag={Link} to="/hosts/new">Add host</Button>
-                    </div>
-                    <h3>Hosts</h3>
+                    <Stack direction="horizontal" gap={2}>
+                      <h2>Hosts <Badge bg="dark">{hosts.length}</Badge></h2>
+                      <div className="float-right ms-auto">
+                          <Button variant="dark" as={Link} to="/hosts/new">Add host</Button>
+                      </div>
+                    </Stack>
                     <Table className="mt-4">
                         <thead>
                         <tr>
                             <th width="20%">Name</th>
                             <th width="20%">Address</th>
                             <th width="20%">Port</th>
+                            <th width="20%">Active</th>
                             <th width="20%">Actions</th>
                         </tr>
                         </thead>

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, ButtonGroup, Container, Table } from 'react-bootstrap';
 import AppNavbar from './../AppNavbar';
 import { Link } from 'react-router-dom';
+import Stack from 'react-bootstrap/Stack';
 
 class HostList extends Component {
     constructor(props) {
@@ -80,11 +81,12 @@ class HostList extends Component {
                 <td style={{whiteSpace: 'nowrap'}}>{host.name}</td>
                 <td>{host.address}</td>
                 <td>{host.port}</td>
+                <td>{String(host.isActive)}</td>
                 <td>
                     <ButtonGroup>
-                        <Button size="sm" color="primary" as={Link} to={"/hosts/" + host.id}>Edit</Button>
-                        <Button size="sm" color="danger" onClick={() => this.remove(host.id)}>Delete</Button>
-                        <Button size="sm" color="info" onClick={() => this.connect(host.id)}>Connect</Button>
+                        <Button size="sm" variant="primary" as={Link} to={"/hosts/" + host.id}>Edit</Button>
+                        <Button size="sm" variant="danger" onClick={() => this.remove(host.id)}>Delete</Button>
+                        <Button size="sm" variant="success" onClick={() => this.connect(host.id)}>Connect</Button>
                     </ButtonGroup>
                 </td>
             </tr>
@@ -94,16 +96,19 @@ class HostList extends Component {
             <div>
                 <AppNavbar/>
                 <Container fluid>
-                    <div className="float-right">
-                        <Button color="success" as={Link} to="/hosts/new">Add host</Button>
-                    </div>
-                    <h3>Hosts</h3>
+                    <Stack direction="horizontal" gap={2}>
+                      <h2>Hosts</h2>
+                      <div className="float-right ms-auto">
+                          <Button color="success" as={Link} to="/hosts/new">Add host</Button>
+                      </div>
+                    </Stack>
                     <Table className="mt-4">
                         <thead>
                         <tr>
                             <th width="20%">Name</th>
                             <th width="20%">Address</th>
                             <th width="20%">Port</th>
+                            <th width="20%">Active</th>
                             <th width="20%">Actions</th>
                         </tr>
                         </thead>

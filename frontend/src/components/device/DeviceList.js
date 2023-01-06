@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, ButtonGroup, Container, Table, Badge } from 'react-bootstrap';
 import AppNavbar from './../AppNavbar';
 import { Link } from 'react-router-dom';
+import { RiAndroidLine, RiAppleLine } from 'react-icons/ri';
 
 class DeviceList extends Component {
     constructor(props) {
@@ -21,7 +22,7 @@ class DeviceList extends Component {
                 <td style={{whiteSpace: 'nowrap'}}>{device.name}</td>
                 <td>{device.serial}</td>
                 <td>{device.state}</td>
-                <td>{device.osType==='ANDROID' ? <img src="android.png"/> : <img src="appleinc.png"/>}</td>
+                <td><h5>{device.osType==='ANDROID' ? <RiAndroidLine /> : <RiAppleLine />}</h5></td>
                 <td>{device.osVersion}</td>
             </tr>
         });

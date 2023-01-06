@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, ButtonGroup, Container, Table, Stack, Badge } from 'react-bootstrap';
 import AppNavbar from './../AppNavbar';
 import { Link } from 'react-router-dom';
+import { RiRefreshLine } from 'react-icons/ri';
 
 class HostList extends Component {
     constructor(props) {
@@ -10,6 +11,10 @@ class HostList extends Component {
             this.remove = this.remove.bind(this);
     }
     componentDidMount() {
+        this.getHosts()
+    }
+
+    async getHosts() {
         fetch('/hosts')
             .then(response => response.json())
             .then(data => this.setState({hosts: data}));
@@ -72,6 +77,17 @@ class HostList extends Component {
         })
     }
 
+    async updateState(id) {
+        await fetch(`/host/${id}/updateState?deleteDevices=true`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        this.getHosts()
+    }
+
     render() {
         const {hosts} = this.state;
 
@@ -83,9 +99,10 @@ class HostList extends Component {
                 <td>{String(host.isActive)}</td>
                 <td>
                     <ButtonGroup>
-                        <Button size="sm" variant="dark" as={Link} to={"/hosts/" + host.id}>Edit</Button>
-                        <Button size="sm" variant="danger" onClick={() => this.remove(host.id)}>Delete</Button>
-                        <Button size="sm" variant="success" onClick={() => this.connect(host.id)}>Connect</Button>
+                        <Button size="sm" variant="outline-dark" as={Link} to={"/hosts/" + host.id}>Edit</Button>
+                        <Button size="sm" variant="outline-danger" onClick={() => this.remove(host.id)}>Delete</Button>
+                        <Button size="sm" variant="outline-success" onClick={() => this.connect(host.id)}>Connect</Button>
+                        <Button size="sm" variant="outline-info" onClick={() => this.updateState(host.id)}><RiRefreshLine /></Button>
                     </ButtonGroup>
                 </td>
             </tr>

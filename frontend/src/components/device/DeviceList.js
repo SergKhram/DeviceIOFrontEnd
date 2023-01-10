@@ -4,17 +4,6 @@ import AppNavbar from './../AppNavbar';
 import { Link } from 'react-router-dom';
 import { RiAndroidLine, RiAppleLine } from 'react-icons/ri';
 
-export const CustomDropdown = (props) => (
-    <Form.Select onChange={props.onChange}>
-      <option defaultValue>All hosts</option>
-      {props.options.map((item, index) => (
-          <option key={index} value={item.id}>
-            {item.name}
-          </option>
-      ))}
-    </Form.Select>
-)
-
 class DeviceList extends Component {
     constructor(props) {
             super(props);
@@ -64,10 +53,14 @@ class DeviceList extends Component {
                     <Stack direction="horizontal" gap={2}>
                         <h2>Devices <Badge bg="dark">{devices.length}</Badge></h2>
                         <div className="float-right ms-auto">
-                            <CustomDropdown
-                                  options={this.state.hosts}
-                                  onChange={this.onHostChange}
-                                />
+                            <Form.Select onChange={this.onHostChange}>
+                              <option defaultValue>All hosts</option>
+                              {hosts.map((item, index) => (
+                                  <option key={index} value={item.id}>
+                                    {item.name}
+                                  </option>
+                              ))}
+                            </Form.Select>
                         </div>
                     </Stack>
                     <Table className="mt-4" responsive="sm">

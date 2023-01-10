@@ -18,7 +18,7 @@ export const CustomDropdown = (props) => (
 class DeviceList extends Component {
     constructor(props) {
             super(props);
-            this.state = {devices: [], hosts: [], hostId: ''};
+            this.state = {devices: [], hosts: []};
     }
 
     getDevices = (hostId) => {

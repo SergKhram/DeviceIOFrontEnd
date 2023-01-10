@@ -7,7 +7,7 @@ import { RiRefreshLine } from 'react-icons/ri';
 class HostList extends Component {
     constructor(props) {
             super(props);
-            this.state = {hosts: [], isActive: false};
+            this.state = {hosts: [],};
             this.remove = this.remove.bind(this);
     }
     componentDidMount() {
@@ -87,7 +87,7 @@ class HostList extends Component {
     }
 
     render() {
-        const {hosts, isActive} = this.state;
+        const {hosts} = this.state;
 
         const hostList = hosts.map(host => {
             return <tr key={host.id}>

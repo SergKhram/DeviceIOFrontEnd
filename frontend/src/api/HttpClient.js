@@ -16,7 +16,7 @@ class HttpClient {
     }
 
     async getDevices(id, isSaved) {
-        return await fetch('/devices?hostId=' + id + '&isSaved=' + String(isSaved), {
+        return await fetch('/devices?' + ((id !== '') ? 'hostId=' + id + '&' : '') + 'isSaved=' + String(isSaved), {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -90,7 +90,6 @@ class HttpClient {
     }
 
     async getHost(id) {
-        console.log(id)
         return await fetch(`/host/` + id, {
             method: 'GET',
             headers: {

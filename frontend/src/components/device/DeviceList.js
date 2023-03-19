@@ -3,32 +3,30 @@ import { Button, ButtonGroup, Container, Table, Badge, Stack, Form } from 'react
 import AppNavbar from './../AppNavbar';
 import { Link } from 'react-router-dom';
 import { RiAndroidLine, RiAppleLine } from 'react-icons/ri';
+import HttpClient from './../../api/HttpClient';
 
 class DeviceList extends Component {
+    defaultHostFilterValue = 'All hosts'
+    httpClient = new HttpClient()
+
     constructor(props) {
             super(props);
             this.state = {devices: [], hosts: []};
     }
 
     getDevices = (hostId) => {
-        fetch(hostId === '' ? '/devices?isSaved=true' : '/devices?isSaved=true&hostId=' + hostId)
+        this.httpClient.getDevices(hostId, true)
             .then(response => response.json())
             .then(data => this.setState({devices: data}));
     }
 
-    getHosts() {
-        fetch('/hosts')
-            .then(response => response.json())
-            .then(data => this.setState({hosts: data}));
-    }
-
     componentDidMount() {
         this.getDevices('')
-        this.getHosts()
+        this.httpClient.getHosts().then(data => this.setState({hosts: data}))
     }
 
     onHostChange = (event) => {
-      if(event.target.value !== 'All hosts') {
+      if(event.target.value !== this.defaultHostFilterValue) {
         this.getDevices(event.target.value)
       } else {
         this.getDevices('')
@@ -54,7 +52,7 @@ class DeviceList extends Component {
                         <h2>Devices <Badge bg="dark">{devices.length}</Badge></h2>
                         <div className="float-right ms-auto">
                             <Form.Select onChange={this.onHostChange}>
-                              <option defaultValue>All hosts</option>
+                              <option defaultValue>{this.defaultHostFilterValue}</option>
                               {hosts.map((item, index) => (
                                   <option key={index} value={item.id}>
                                     {item.name}

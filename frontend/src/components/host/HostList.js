@@ -3,7 +3,7 @@ import { Button, ButtonGroup, Container, Table, Stack, Badge } from 'react-boots
 import AppNavbar from './../AppNavbar';
 import { Link } from 'react-router-dom';
 import { RiRefreshLine } from 'react-icons/ri';
-import HttpClient from './../../api/HttpClient'
+import HttpClient from './../../api/HttpClient';
 
 class HostList extends Component {
 

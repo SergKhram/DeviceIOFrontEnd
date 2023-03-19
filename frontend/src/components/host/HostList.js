@@ -47,7 +47,7 @@ class HostList extends Component {
 
     async refresh(id) {
         this.httpClient.updateHostState(id)
-        this.httpClient.getHosts()
+        this.httpClient.getHosts().then(data => this.setState({hosts: data}));
     }
 
     render() {

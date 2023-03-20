@@ -3,6 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Button, Container, Form } from 'react-bootstrap';
 import AppNavbar from './../AppNavbar';
 import Stack from 'react-bootstrap/Stack';
+import HttpClient from './../../api/HttpClient'
 
 class HostEdit extends Component {
 
@@ -11,6 +12,8 @@ class HostEdit extends Component {
         address: '',
         port: ''
     };
+
+    httpClient = new HttpClient()
 
     constructor(props) {
         super(props);
@@ -23,8 +26,12 @@ class HostEdit extends Component {
     
     async componentDidMount() {
         if (this.props.match.params.id !== 'new') {
-            const host = await (await fetch(`/host/${this.props.match.params.id}`)).json();
-            this.setState({item: host});
+            const host = await this.httpClient.getHost(this.props.match.params.id).then(
+                response => {
+                    return response.json()
+                }
+            );
+            this.setState({item: host})
         }
     }
 
@@ -41,21 +48,15 @@ class HostEdit extends Component {
         event.preventDefault();
         const {item} = this.state;
 
-        await fetch('/host' + (item.id ? '/' + item.id : ''), {
-            method: (item.id) ? 'PUT' : 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(item),
-        });
-        await fetch('/host/' + item.id + '/connect', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+        ((item.id) ? this.httpClient.updateHost(item.id, item) : this.httpClient.addHost(item)).then(
+            response => {
+                return response.json()
             }
-        })
+        ).then(
+            data => {
+                this.httpClient.connectHost(data.id)
+            }
+        );
         this.props.history.push('/hosts');
     }
     

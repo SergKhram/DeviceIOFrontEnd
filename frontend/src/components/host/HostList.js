@@ -3,89 +3,51 @@ import { Button, ButtonGroup, Container, Table, Stack, Badge } from 'react-boots
 import AppNavbar from './../AppNavbar';
 import { Link } from 'react-router-dom';
 import { RiRefreshLine } from 'react-icons/ri';
+import HttpClient from './../../api/HttpClient';
 
 class HostList extends Component {
+
+    httpClient = new HttpClient()
+
     constructor(props) {
             super(props);
             this.state = {hosts: []};
             this.remove = this.remove.bind(this);
     }
     componentDidMount() {
-        this.getHosts()
-    }
-
-    async getHosts() {
-        fetch('/hosts')
-            .then(response => response.json())
-            .then(data => this.setState({hosts: data}));
+        this.httpClient.getHosts().then(data => this.setState({hosts: data}));
     }
 
     async remove(id) {
-        await fetch(`/host/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(() => {
+        this.httpClient.deleteHost(id).then(() => {
+            console.log('Updating hosts list')
             let updatedHosts = [...this.state.hosts].filter(i => i.id !== id);
             this.setState({hosts: updatedHosts});
         });
     }
 
     async connect(id) {
-        const dbDeviceList = await fetch('/devices?hostId=' + id + '&isSaved=true', {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(response => response.json())
-        const currentDeviceList = await fetch('/devices?hostId=' + id + '&isSaved=false', {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(response => response.json())
-//        console.log("DELETING IS STARTED")
+        let dbDeviceList = await this.httpClient.getDevices(id, true).then(response => response.json())
+        let currentDeviceList = await this.httpClient.getDevices(id, false).then(response => response.json())
         dbDeviceList.filter(
-            dbDevice => !currentDeviceList.includes(dbDevice)
+            dbDevice => !currentDeviceList.some((currentDevice) => currentDevice.serial === dbDevice.serial)
         ).forEach(
             (dbDevice) => {
-                fetch(`/device/` + dbDevice.id, {
-                    method: 'DELETE',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                })
+                console.log('Deleting device with id = ' + dbDevice.id)
+                this.httpClient.deleteDevice(dbDevice.id)
             }
         )
-//        console.log("DELETING IS FINISHED")
-        await fetch('/devices', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(
-                currentDeviceList.filter(
-                    currentDevice => !dbDeviceList.some((dbDevice) => dbDevice.serial === currentDevice.serial)
-                )
-            )
-        })
+        let devicesToSave = JSON.stringify(
+              currentDeviceList.filter(
+                  currentDevice => !dbDeviceList.some((dbDevice) => dbDevice.serial === currentDevice.serial)
+              )
+          )
+        await this.httpClient.postDevices(devicesToSave)
     }
 
-    async updateState(id) {
-        await fetch(`/host/${id}/updateState?deleteDevices=true`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        this.getHosts()
+    async refresh(id) {
+        this.httpClient.updateHostState(id)
+        this.httpClient.getHosts().then(data => this.setState({hosts: data}));
     }
 
     render() {
@@ -102,7 +64,7 @@ class HostList extends Component {
                         <Button size="sm" variant="outline-dark" as={Link} to={"/hosts/" + host.id}>Edit</Button>
                         <Button size="sm" variant="outline-danger" onClick={() => this.remove(host.id)}>Delete</Button>
                         <Button size="sm" variant="outline-success" onClick={() => this.connect(host.id)}>Connect</Button>
-                        <Button size="sm" variant="outline-info" onClick={() => this.updateState(host.id)}><RiRefreshLine /></Button>
+                        <Button size="sm" variant="outline-info" onClick={() => this.refresh(host.id)}><RiRefreshLine /></Button>
                     </ButtonGroup>
                 </td>
             </tr>
